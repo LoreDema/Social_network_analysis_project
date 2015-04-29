@@ -22,6 +22,21 @@ class ArtistInfo:
         self.terms = terms
 
 
+def chunk_list(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
+def get_node_listening():
+
+
 def average_medium_hotness(artists, k):
     genres = {}
     for artist in artists:
@@ -100,7 +115,18 @@ def main():
         artist_sort[i] = artists[i].hotness
 
     artist_sort = sorted(artist_sort.items(), key=operator.itemgetter(1))
-    print artist_sort
+
+    # calculates and sorts the closeness centrality
+    # for each node of the LastFM network
+    net_clc = nx.closeness_centrality(net)
+    net_clc = sorted(net_clc.items(), key=operator.itemgetter(1))
+    net_clc = [i[1] for i in net_clc]
+
+    chunks_clc = chunk_list(net_clc, 6)
+
+
+
+
 
 if __name__ == '__main__':
     main()

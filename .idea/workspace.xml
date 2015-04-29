@@ -24,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="random_net_compare.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="random_net_compare.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/random_net_compare.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="6.55" vertical-offset="0" max-vertical-offset="2466">
-              <caret line="131" column="10" selection-start-line="131" selection-start-column="10" selection-end-line="131" selection-end-column="10" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1062" max-vertical-offset="2466">
+              <caret line="65" column="77" selection-start-line="65" selection-start-column="4" selection-end-line="65" selection-end-column="77" />
               <folding>
                 <element signature="e#171#192#0" expanded="true" />
                 <marker date="1430259748000" expanded="true" signature="5150:5152" placeholder="..." />
@@ -40,11 +40,21 @@
       <file leaf-file-name="music_anlisysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/music_anlisysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1374" max-vertical-offset="1998">
-              <caret line="102" column="21" selection-start-line="102" selection-start-column="21" selection-end-line="102" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1242" max-vertical-offset="2466">
+              <caret line="79" column="42" selection-start-line="76" selection-start-column="4" selection-end-line="79" selection-end-column="42" />
               <folding>
                 <element signature="e#171#192#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="clean_listening.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/clean_listening.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.9" vertical-offset="324" max-vertical-offset="756">
+              <caret line="36" column="10" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="10" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -57,6 +67,7 @@
         <option value="$PROJECT_DIR$/data/music_anlisysis.py" />
         <option value="$PROJECT_DIR$/random_net_compare.py" />
         <option value="$PROJECT_DIR$/music_anlisysis.py" />
+        <option value="$PROJECT_DIR$/clean_listening.py" />
       </list>
     </option>
   </component>
@@ -393,24 +404,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/random_net_compare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1062" max-vertical-offset="2466">
+          <caret line="65" column="77" selection-start-line="65" selection-start-column="4" selection-end-line="65" selection-end-column="77" />
+          <folding>
+            <element signature="e#171#192#0" expanded="true" />
+            <marker date="1430259748000" expanded="true" signature="5150:5152" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/music_anlisysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1374" max-vertical-offset="1998">
-          <caret line="102" column="21" selection-start-line="102" selection-start-column="21" selection-end-line="102" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1242" max-vertical-offset="2466">
+          <caret line="79" column="42" selection-start-line="76" selection-start-column="4" selection-end-line="79" selection-end-column="42" />
           <folding>
             <element signature="e#171#192#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/random_net_compare.py">
+    <entry file="file://$PROJECT_DIR$/clean_listening.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="6.55" vertical-offset="0" max-vertical-offset="2466">
-          <caret line="131" column="10" selection-start-line="131" selection-start-column="10" selection-end-line="131" selection-end-column="10" />
-          <folding>
-            <element signature="e#171#192#0" expanded="true" />
-            <marker date="1430259748000" expanded="true" signature="5150:5152" placeholder="..." />
-          </folding>
+        <state vertical-scroll-proportion="0.9" vertical-offset="324" max-vertical-offset="756">
+          <caret line="36" column="10" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>

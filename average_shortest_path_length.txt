@@ -1,2 +1,2 @@
 LastFM network average shortest path: 4.03868897873
-Random network average shortest path: 4.08374090314
+Random network average shortest path: 4.08111095127
