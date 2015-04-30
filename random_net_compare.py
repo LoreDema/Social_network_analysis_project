@@ -1,4 +1,4 @@
-__author__ = 'Lorenzo De Mattei, Andrea Meini, Vincenzo Rizza'
+__authors__ = 'Lorenzo De Mattei, Andrea Meini, Vincenzo Rizza'
 __license__ = "GPL"
 __email__ = 'lorenzo.demattei@gmail.com, ndrmeini@gmail.com, vincenzorizza6@gmail.com'
 
