@@ -108,7 +108,7 @@ def average_medium_hotness(artists, k):
     return genres
 
 
-def main():
+def read_data():
     # reads from file and building the LastFm network
     net = nx.Graph()
     with codecs.open('data/network_cleaned.csv', 'r', 'utf-8') as fp:
@@ -144,11 +144,12 @@ def main():
                 terms.append((line[1], line[2], line[3]))
             artist = line[0]
 
-    avg_htn = average_medium_hotness(artists, 10)
+    return artists, net
 
-    # calculates and sorts the closeness centrality
-    # for each node of the LastFM network
-    net_clc = nx.closeness_centrality(net)
+
+def centrality_chunks(net, artists, measure):
+    if measure == 'closeness':
+        net_clc = nx.closeness_centrality(net)
     net_clc = sorted(net_clc.items(), key=operator.itemgetter(1))
 
     users_info = get_node_listening(artists)
@@ -160,6 +161,21 @@ def main():
     net_clc[:] = [item for i, item in enumerate(net_clc) if i not in to_del]
 
     chunks_clc = chunk_list(net_clc, 4)
+    return chunks_clc, users_info
+
+
+def main():
+
+    # reads data from files
+    artists, net = read_data()
+
+    # calculates the medium hotness for each genres
+    # setting the constant k = 10
+    avg_htn = average_medium_hotness(artists, 10)
+
+    # calculates and sorts the closeness centrality
+    # for each node of the LastFM network
+    chunks_clc, users_info = centrality_chunks(net, artists, 'closeness')
 
     artists_frequencies = get_artists_frequencies(users_info)
 
