@@ -24,13 +24,13 @@ def distributions_plotting(net, random_net):
     plt.legend()
     plt.ylabel('frequency')
     plt.xlabel('degree')
-    plt.savefig('degree_distribution.png', format='png')
+    plt.savefig('net_analysis/degree_distribution.png', format='png')
     plt.close()
 
 
 def average_shortest_path(net, random_net):
     net_asp = nx.average_shortest_path_length(net)
-    out_file = open('average_shortest_path_length.txt', 'w+')
+    out_file = open('net_analysis/average_shortest_path_length.txt', 'w+')
     out_file.write('LastFM network average shortest path: ' + str(net_asp) + '\n')
     try:
         random_net_asp = nx.average_shortest_path_length(random_net)
@@ -44,7 +44,7 @@ def average_shortest_path(net, random_net):
 
 
 def clustering_coefficient(net, random_net):
-    out_file = open('average_cluster_coefficient.txt ', 'w+')
+    out_file = open('net_analysis/average_cluster_coefficient.txt ', 'w+')
     net_cc = nx.average_clustering(net)
     out_file.write('LastFM network average cluster coefficient: ' + str(net_cc) + '\n')
     random_net_cc = nx.average_clustering(random_net)
@@ -67,7 +67,51 @@ def closeness(net, random_net):
     plt.legend()
     plt.ylabel('centrality')
     plt.xlabel('rank')
-    plt.savefig('closeness_centrality.png', format='png')
+    plt.savefig('net_analysis/closeness_centrality.png', format='png')
+    plt.close()
+
+
+def betweness(net, random_net):
+    net_bc = nx.closeness_centrality(net)
+    random_net_bc = nx.closeness_centrality(random_net)
+
+    net_bc = sorted(net_bc.items(), key=operator.itemgetter(1))
+    net_bc = [i[1] for i in net_bc]
+
+    random_net_bc = sorted(random_net_bc.items(), key=operator.itemgetter(1))
+    random_net_bc = [i[1] for i in random_net_bc]
+
+    plt.plot(net_bc, label='LastFM net', color='b')
+    plt.plot(random_net_bc, label='Random net', color='r')
+    plt.legend()
+    plt.ylabel('centrality')
+    plt.xlabel('rank')
+    plt.savefig('net_analysis/betweenness_centrality.png', format='png')
+    plt.close()
+
+
+def page_rank(net, random_net):
+    net_pr = nx.pagerank(net)
+    if nx.is_connected(random_net):
+        random_net_pr = nx.pagerank(random_net)
+    else:
+        random_net_pr = {}
+        for g in nx.connected_component_subgraphs(random_net):
+            sub_pr = nx.pagerank(g)
+            random_net_pr.update(sub_pr)
+
+    net_pr = sorted(net_pr.items(), key=operator.itemgetter(1))
+    net_pr = [i[1] for i in net_pr]
+
+    random_net_pr = sorted(random_net_pr.items(), key=operator.itemgetter(1))
+    random_net_pr = [i[1] for i in random_net_pr]
+
+    plt.plot(net_pr, label='LastFM net', color='b')
+    plt.plot(random_net_pr, label='Random net', color='r')
+    plt.legend()
+    plt.ylabel('centrality')
+    plt.xlabel('rank')
+    plt.savefig('net_analysis/page_rank.png', format='png')
     plt.close()
 
 
@@ -95,55 +139,19 @@ def main():
     clustering_coefficient(net, random_net)
 
     # calculates the closeness centrality for each node of the LastFM network
-    # and of the random network and plots the closeness centralises ordered
+    # and of the random network, plots the closeness centralises ordered
     # descending for both the network
     closeness(net, random_net)
 
-
-    # calculates the betweenness centrality for each node of the LastFM network
-    # and of the random network
-    net_bc = nx.closeness_centrality(net)
-    random_net_bc = nx.closeness_centrality(random_net)
-
-    # plots the betweenness centralises ordered descending for both the network
-    net_bc = sorted(net_bc.items(), key=operator.itemgetter(1))
-    net_bc = [i[1] for i in net_bc]
-
-    random_net_bc = sorted(random_net_bc.items(), key=operator.itemgetter(1))
-    random_net_bc = [i[1] for i in random_net_bc]
-
-    plt.plot(net_bc, label='LastFM net', color='b')
-    plt.plot(random_net_bc, label='Random net', color='r')
-    plt.legend()
-    plt.ylabel('centrality')
-    plt.xlabel('rank')
-    plt.savefig('betweenness_centrality.png', format='png')
-    plt.close()
+    # calculates the betweeness centrality for each node of the LastFM network
+    # and of the random network, plots the betweeness centralises ordered
+    # descending for both the network
+    betweness(net, random_net)
 
     # calculates the page rank for each node of the LastFM network
-    # and of the random network
-    net_pr = nx.pagerank(net)
-    if nx.is_connected(random_net):
-        random_net_pr = nx.pagerank(random_net)
-    else:
-        random_net_pr = {}
-        for g in nx.connected_component_subgraphs(random_net):
-            sub_pr = nx.pagerank(g)
-            random_net_pr.update(sub_pr)
-    # plots the page rank ordered descending for both the network
-    net_pr = sorted(net_pr.items(), key=operator.itemgetter(1))
-    net_pr = [i[1] for i in net_pr]
-
-    random_net_pr = sorted(random_net_pr.items(), key=operator.itemgetter(1))
-    random_net_pr = [i[1] for i in random_net_pr]
-
-    plt.plot(net_pr, label='LastFM net', color='b')
-    plt.plot(random_net_pr, label='Random net', color='r')
-    plt.legend()
-    plt.ylabel('centrality')
-    plt.xlabel('rank')
-    plt.savefig('page_rank.png', format='png')
-    plt.close()
+    # and of the random network, plots the page rank ordered
+    # descending for both the network
+    page_rank(net, random_net)
 
 if __name__ == '__main__':
     main()
