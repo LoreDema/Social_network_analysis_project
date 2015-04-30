@@ -47,6 +47,19 @@ def get_artists_frequencies(users_info):
     return artists_frequencies
 
 
+def get_genre_frequencies(users_info):
+    genre_frequencies = {}
+    for user in users_info:
+        for listen in users_info[user]:
+            for genre in listen[2]:
+                if genre not in genre_frequencies:
+                    genre_frequencies[genre] = listen[2][genre]
+                else:
+                    genre_frequencies[genre] += listen[2][genre]
+
+    return genre_frequencies
+
+
 def get_node_listening(artists):
     users_listening = {}
     with codecs.open('data/cleaned_listenings.csv', 'r', 'utf-8') as fp:
@@ -205,6 +218,42 @@ def plot_artist_distribution(chunks, artists_frequencies, users_info, artists, m
         plt.close()
 
 
+def plot_frequencies_distribution(chunks, genre_frequencies, users_info, avg_htn_genres, measure):
+    for i, chunk in enumerate(chunks):
+        list_gf = []
+        list_gh = []
+        chunk_users_info = {}
+        for user in chunk:
+            chunk_users_info[user[0]] = users_info[user[0]]
+        list_cgf = get_genre_frequencies(chunk_users_info)
+        list_cgf = sorted(list_cgf.items(), key=operator.itemgetter(1))
+        to_del = []
+        for j, genre in enumerate(list_cgf):
+            if avg_htn_genres[genre[0]] <= 0:
+                to_del.append(j)
+            list_gf.append(genre_frequencies[genre[0]])
+            list_gh.append(avg_htn_genres[genre[0]])
+
+        list_cgf[:] = [float(item[1]) for j, item in enumerate(list_cgf) if j not in to_del]
+        list_gf[:] = [float(item) for j, item in enumerate(list_gf) if j not in to_del]
+        list_gh[:] = [item for j, item in enumerate(list_gh) if j not in to_del]
+
+        r_caf = 10.0/max(list_cgf)
+        r_gf = 10.0/max(list_gf)
+        r_gh = 10.0/max(list_gh)
+
+        list_cgf = [math.log(j * r_caf) for j in list_cgf]
+        list_gf = [math.log(j * r_gf) for j in list_gf]
+        list_gh = [math.log(j * r_gh) for j in list_gh]
+
+        plt.plot(list_gf, label='Global genre frequency', color='r')
+        plt.plot(list_gh, label='Genre hotness', color='y')
+        plt.plot(list_cgf, label='Chunk artist frequency', color='b')
+        # plt.legend()
+        plt.savefig('listening_analysis/genre_chunk_' + measure + '_' + str(i + 1) + '.png', format='png')
+        plt.close()
+
+
 def main():
 
     # reads data from files
@@ -212,25 +261,28 @@ def main():
 
     # calculates the medium hotness for each genres
     # setting the constant k = 10
-    avg_htn = average_medium_hotness(artists, 10)
+    avg_htn_genres = average_medium_hotness(artists, 10)
 
     # calculates and sorts the closeness centrality
     # for each node of the LastFM network
     # then chunks the node into 4 groups
     chunks_clc, users_info = centrality_chunks(net, artists, 'closeness')
     artists_frequencies = get_artists_frequencies(users_info)
+    genre_frequencies = get_genre_frequencies(users_info)
     # calculates and plot chunk and global distributions
-    # compared with hotness
+    # compared with hotness for artists and genres
     plot_artist_distribution(chunks_clc, artists_frequencies, users_info, artists, 'closeness')
+    plot_frequencies_distribution(chunks_clc, genre_frequencies, users_info, avg_htn_genres, 'closeness')
 
     # calculates and sorts the closeness centrality
     # for each node of the LastFM network
     # then chunks the node into 4 groups
-    chunks_clc, users_info = centrality_chunks(net, artists, 'betweness')
+    chunks_clb, users_info = centrality_chunks(net, artists, 'betweness')
     artists_frequencies = get_artists_frequencies(users_info)
     # calculates and plot chunk and global distributions
-    # compared with hotness
-    plot_artist_distribution(chunks_clc, artists_frequencies, users_info, artists, 'betweness')
+    # compared with hotness for artists and genres
+    plot_artist_distribution(chunks_clb, artists_frequencies, users_info, artists, 'betweness')
+    plot_frequencies_distribution(chunks_clb, genre_frequencies, users_info, avg_htn_genres, 'betweness')
 
 
 if __name__ == '__main__':
