@@ -88,14 +88,15 @@ def get_node_listening(artists):
     return users_listening
 
 
-def average_medium_hotness(artists, k):
+def average_genre_hotness(artists, k):
     genres = {}
     for artist in artists:
         for genre in artists[artist].terms:
             if genre not in genres:
-                genres[genre] = ([(artists[artist].hotness, artists[artist].terms[genre])], 1)
+                genres[genre] = ([(artists[artist].hotness, artists[artist].terms[genre])],
+                                 artists[artist].terms[genre])
             else:
-                freq = genres[genre][1] + 1
+                freq = genres[genre][1] + artists[artist].terms[genre]
                 genres[genre] = (genres[genre][0], freq)
                 genres[genre][0].append((artists[artist].hotness, artists[artist].terms[genre]))
     avg_ht_freq_ratio = 0
@@ -261,7 +262,7 @@ def main():
 
     # calculates the medium hotness for each genres
     # setting the constant k = 10
-    avg_htn_genres = average_medium_hotness(artists, 10)
+    avg_htn_genres = average_genre_hotness(artists, 10)
 
     # calculates and sorts the closeness centrality
     # for each node of the LastFM network
