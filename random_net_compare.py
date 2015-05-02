@@ -115,6 +115,14 @@ def page_rank(net, random_net):
     plt.close()
 
 
+def print_net(net):
+    out_file = open('random_net/net.csv', 'w+')
+    for node in net.nodes():
+        for friend in net.neighbors(node):
+            out_file.write(str(node) + ',' + str(friend) + '\n')
+    out_file.close()
+
+
 def main():
     # reads from file and building the LastFm network
     net = nx.Graph()
@@ -125,6 +133,7 @@ def main():
 
     # generating a random network
     random_net = nx.gnm_random_graph(len(net.nodes()), len(net.edges()))
+    print_net(random_net)
 
     # calculates the degree distributions for the LastFM network
     # and for the random network, then plots the results
@@ -152,6 +161,7 @@ def main():
     # and of the random network, plots the page rank ordered
     # descending for both the network
     page_rank(net, random_net)
+
 
 if __name__ == '__main__':
     main()
