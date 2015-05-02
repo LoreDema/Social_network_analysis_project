@@ -255,10 +255,38 @@ def plot_frequencies_distribution(chunks, genre_frequencies, users_info, avg_htn
         plt.close()
 
 
+def get_key(value):
+    get_hot = operator.itemgetter(1)
+    return get_hot(value).hotness
+
+
+def artists_chunk_genres(artists, n_chunks):
+
+    artists = artists.items()
+    artists = sorted(artists, key=get_key)
+
+    artists_chunk = chunk_list(artists, n_chunks)
+
+    chunk_genres_frequncies = []
+    for chunk in artists_chunk:
+        genre_frequencies = {}
+        for artist in chunk:
+            for genre in artist[1].terms:
+                if genre not in genre_frequencies:
+                    genre_frequencies[genre] = artist[1].terms[genre]
+                else:
+                    genre_frequencies[genre] += artist[1].terms[genre]
+        genre_frequencies = sorted(genre_frequencies.items(), key=operator.itemgetter(1))
+        chunk_genres_frequncies.append(genre_frequencies)
+    print chunk_genres_frequncies
+
+
 def main():
 
     # reads data from files
     artists, net = read_data()
+
+    artists_chunk_genres(artists, 6)
 
     # calculates the medium hotness for each genres
     # setting the constant k = 10
