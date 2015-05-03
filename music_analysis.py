@@ -278,7 +278,13 @@ def artists_chunk_genres(artists, n_chunks):
                     genre_frequencies[genre] += artist[1].terms[genre]
         genre_frequencies = sorted(genre_frequencies.items(), key=operator.itemgetter(1))
         chunk_genres_frequncies.append(genre_frequencies)
-    print chunk_genres_frequncies
+
+
+def print_genre_hotness(avg_htn_genres):
+    out_file = open('listening_analysis/genre_hotness.csv', 'w+')
+    for genre in avg_htn_genres:
+        out_file.write(genre.encode('utf-8') + ',' + str(avg_htn_genres[genre]).encode('utf-8') + '\n')
+    out_file.close()
 
 
 def main():
@@ -291,6 +297,7 @@ def main():
     # calculates the medium hotness for each genres
     # setting the constant k = 10
     avg_htn_genres = average_genre_hotness(artists, 10)
+    print_genre_hotness(avg_htn_genres)
 
     # calculates and sorts the closeness centrality
     # for each node of the LastFM network
@@ -312,7 +319,6 @@ def main():
     # compared with hotness for artists and genres
     plot_artist_distribution(chunks_clb, artists_frequencies, users_info, artists, 'betweness')
     plot_frequencies_distribution(chunks_clb, genre_frequencies, users_info, avg_htn_genres, 'betweness')
-
 
 if __name__ == '__main__':
     main()
