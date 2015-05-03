@@ -7,6 +7,7 @@ import codecs
 import operator
 import math
 import matplotlib.pyplot as plt
+import csv
 
 
 class ArtistInfo:
@@ -267,7 +268,7 @@ def artists_chunk_genres(artists, n_chunks):
 
     artists_chunk = chunk_list(artists, n_chunks)
 
-    chunk_genres_frequncies = []
+    chunk_genres_frequencies = []
     for chunk in artists_chunk:
         genre_frequencies = {}
         for artist in chunk:
@@ -277,17 +278,17 @@ def artists_chunk_genres(artists, n_chunks):
                 else:
                     genre_frequencies[genre] += artist[1].terms[genre]
         genre_frequencies = sorted(genre_frequencies.items(), key=operator.itemgetter(1))
-        chunk_genres_frequncies.append(genre_frequencies)
-    return chunk_genres_frequncies
+        chunk_genres_frequencies.append(genre_frequencies)
+    return chunk_genres_frequencies
 
-def print_chunks(chunks, file, fieldnames):
+
+def print_chunks(chunks, file_name):
     i = 0
     for chunk in chunks:
-        with open(file+str(i)+".csv", 'wb') as f:  # Just use 'w' mode in 3.x
-            w = csv.DictWriter(f, fieldnames)
+        with open(file_name+str(i)+".csv", 'wb') as f:
             w = csv.writer(f)
             w.writerows(chunk)
-        i = i+1
+        i += 1
 
 
 def print_genre_hotness(avg_htn_genres):
@@ -304,8 +305,8 @@ def main():
 
     # calculates genres for artist splitted by hotness
     # setting chunk = 6
-    artists_chunk_genres(artists, 6)
-    print_chunks(artists_chunks, 'chunks_genres_frequencies/artist_chunk-', ['genre', 'freq'])
+    artists_chunk = artists_chunk_genres(artists, 6)
+    print_chunks(artists_chunk, 'chunks_genres_frequencies/artist_chunk-')
 
     # calculates the medium hotness for each genres
     # setting the constant k = 10
