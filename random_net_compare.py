@@ -72,8 +72,8 @@ def closeness(net, random_net):
 
 
 def betweness(net, random_net):
-    net_bc = nx.closeness_centrality(net)
-    random_net_bc = nx.closeness_centrality(random_net)
+    net_bc = nx.betweenness_centrality(net)
+    random_net_bc = nx.betweenness_centrality(random_net)
 
     net_bc = sorted(net_bc.items(), key=operator.itemgetter(1))
     net_bc = [i[1] for i in net_bc]
