@@ -278,6 +278,16 @@ def artists_chunk_genres(artists, n_chunks):
                     genre_frequencies[genre] += artist[1].terms[genre]
         genre_frequencies = sorted(genre_frequencies.items(), key=operator.itemgetter(1))
         chunk_genres_frequncies.append(genre_frequencies)
+    return chunk_genres_frequncies
+
+def print_chunks(chunks, file, fieldnames):
+    i = 0
+    for chunk in chunks:
+        with open(file+str(i)+".csv", 'wb') as f:  # Just use 'w' mode in 3.x
+            w = csv.DictWriter(f, fieldnames)
+            w = csv.writer(f)
+            w.writerows(chunk)
+        i = i+1
 
 
 def print_genre_hotness(avg_htn_genres):
@@ -292,7 +302,10 @@ def main():
     # reads data from files
     artists, net = read_data()
 
+    # calculates genres for artist splitted by hotness
+    # setting chunk = 6
     artists_chunk_genres(artists, 6)
+    print_chunks(artists_chunks, 'chunks_genres_frequencies/artist_chunk-', ['genre', 'freq'])
 
     # calculates the medium hotness for each genres
     # setting the constant k = 10
