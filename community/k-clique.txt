@@ -1,0 +1,3 @@
+Number of communities: 56
+Average density: 9.89285714286
+Density standard deviation: 14.5414169228
