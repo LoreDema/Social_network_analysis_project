@@ -1,0 +1,3 @@
+Number of communities: 322
+Average density: 62.5745341615
+Density standard deviation: 123.903698219
