@@ -8,7 +8,6 @@ import numpy as np
 import music_analysis as ma
 import operator
 import codecs
-import pickle
 
 
 def print_vectors(artists):
@@ -217,53 +216,21 @@ def read_demon():
     return communities
 
 
-def girvan_newman(G):
-
-    if len(G.nodes()) == 1:
-        return [G.nodes()]
-
-    def find_best_edge(G0):
-        """
-        Networkx implementation of edge_betweenness
-        returns a dictionary. Make this into a list,
-        sort it and return the edge with highest betweenness.
-        """
-        eb = nx.edge_betweenness_centrality(G0)
-        eb_il = eb.items()
-        eb_il.sort(key=lambda x: x[1], reverse=True)
-        return eb_il[0][0]
-
-    components = nx.connected_component_subgraphs(G)
-
-    while len(components) == 1:
-        G.remove_edge(*find_best_edge(G))
-        components = nx.connected_component_subgraphs(G)
-
-    result = [c.nodes() for c in components]
-
-    for c in components:
-        result.extend(girvan_newman(c))
-
-    return result
-
-
 def main():
     # reads from file and building the LastFm network
     artists, net = ma.read_data()
     listening = ma.get_node_listening(artists)
 
-    '''
+    print_vectors(artists)
+
     communities_kcliques = list(nx.k_clique_communities(net, 5))
     community_statistics(communities_kcliques, 'k-clique')
     community_listening(communities_kcliques, listening, artists, 'k-clique')
-    '''
-    '''
+
     communities_demon = read_demon()
     community_statistics(communities_demon, 'demon')
     community_listening(communities_demon, listening, artists, 'demon')
-    '''
-    communities_gn = girvan_newman(net)
-    print communities_gn
+
 
 if __name__ == '__main__':
     main()
