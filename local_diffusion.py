@@ -11,6 +11,7 @@ import sys
 import itertools
 from datetime import datetime
 import types
+import matplotlib.pyplot as plt
 
 
 class ArtistInfo:
@@ -35,18 +36,42 @@ class ArtistInfo:
 
 def build_tree(list, threshold):
     added = []
-    newlist = []
-    net = nx.Graph()
+    tmp = []
+    net = nx.DiGraph()
 
+    # Exclude multiple listening of same user
     for item in list:
         if item[1] not in added:
             added.append(item[1])
-            newlist.append(item)
+            tmp.append(item)
 
-    for i in range(1, len(newlist)):
-        time_diff = (newlist[i][0] - newlist[0][0]).total_seconds()
-        if time_diff < threshold:
-            net.add_edge(newlist[0][1], newlist[i][1], weight=time_diff)
+    # Sort list obtained by data time
+    list = tmp
+    list = sorted(list, key=itemgetter(0))
+    for user in list:
+        print user[0], " - ", user[1]
+
+    # Assign the root to a new list
+    newlist = [list[0]]
+
+    # From root cycle over list (second cycle)
+    # If the time between root listening and the node is < threshold...
+    # ... create a net edge and add the node to newList
+    # If the root has at least one child -> newList increased...
+    # ... and the first cycle continue with a new root
+    for root in newlist:
+        for i in range(1, len(list)):
+            if (list[i] != root) and (list[i] not in newlist):
+                time_diff = (list[i][0] - root[0]).total_seconds()
+                if time_diff < threshold:
+                    # print "Padre: ", root[1], " - ", root[0]
+                    # print "Figlio: ", list[i][1]
+                    # print "TIME: ", time_diff
+                    newlist.append(list[i])
+                    # net.add_edge(list[i][1], list[j][1], weight=time_diff)
+
+    print "Final list: "
+    print newlist
 
     return net
 
@@ -55,18 +80,20 @@ def unicode_to_date(date_posted):
     return datetime.strptime(date_posted, '%Y-%m-%d %H:%M:%S')
 
 
-def get_listeners(artists):
+# Return a list of listeners of one artist
+# Each tuple has [played_on, username, artist]
+# List is ascending sorted by played_on value
+def get_listeners(artist):
     listenings = []
     with codecs.open('data/cleaned_listenings.csv', 'r', 'utf-8') as fp:
         for line in fp:
             line = line.strip().split(',')
             try:
                 if line[0] not in listenings:
-                    if line[2] in artists:
+                    if line[2] in artist:
                         listenings.append([unicode_to_date(line[4]), line[0], (line[2])])
                 else:
-                    if line[2] in artists:
-                        # listenings[unicode_to_date(line[4])].append(line[0], (line[2])
+                    if line[2] in artist:
                         listenings.append([unicode_to_date(line[4]), line[0], (line[2])])
             # handles Index Error caused by non utf-8 characters
             except IndexError:
@@ -145,7 +172,7 @@ def main():
     artists = sorted(artists.items(), key=lambda x: x[1].hotness, reverse=True)
 
     # select subset of n artist with minimum hotness
-    # selectArtists(list, n, hotness)
+    # selectArtists(list, n, minimum hotness)
     subset = select_artists(artists, 5, 0.30)
 
     # transform subset into dictionary
@@ -154,15 +181,19 @@ def main():
     # get listeners list of an artist ordered by ascending date
     # TO-DO: ciclare su tutto subset_dict
     # TO-Do: salvare risultati in csv per grafici
-    listeners_list = get_listeners(subset_dict.items()[0])
+    listeners_list = get_listeners(subset_dict.items()[2])
 
     one_day = 86400
-    days_threshold = one_day * 30
+    days_threshold = one_day * 8
     # for each listeners_list build a tree
     # where two users are connected if their listening
     # is under the days_threshold
     net = build_tree(listeners_list, days_threshold)
-    print list(net.edges_iter(data=True))
+    ts = nx.topological_sort(net)
+    # print(ts)
+    # print list(net.edges_iter(data=True))
+    # nx.draw_networkx(net, with_labels=True)
+    #  plt.savefig("data/path.png")
 
 if __name__ == '__main__':
     main()
