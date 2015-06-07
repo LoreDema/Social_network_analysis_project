@@ -8,9 +8,13 @@ import numpy as np
 import music_analysis as ma
 import operator
 import codecs
+from sklearn.decomposition import PCA
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.cm as cmx
+import matplotlib.colors as colors
 
 
-def print_vectors(artists):
+def build_vectors(artists, printing=False):
     genres = []
     for artist in artists:
         for genre in artists[artist].terms:
@@ -24,13 +28,14 @@ def print_vectors(artists):
                 artist_vectors[artist].append(0)
             else:
                 artist_vectors[artist].append(artists[artist].terms[genre])
-    out_file = open('data/artists_vector.csv', 'w+')
-    for artist in artist_vectors:
-        out_file.write(artist.encode('utf-8'))
-        for i in artist_vectors[artist]:
-            out_file.write(',' + unicode(i))
-        out_file.write('\n')
-    out_file.close()
+    if printing:
+        out_file = open('data/artists_vector.csv', 'w+')
+        for artist in artist_vectors:
+            out_file.write(artist.encode('utf-8'))
+            for i in artist_vectors[artist]:
+                out_file.write(',' + unicode(i))
+            out_file.write('\n')
+        out_file.close()
     genres_vectors = {}
     for genre in genres:
         genres_vectors[genre] = []
@@ -39,13 +44,16 @@ def print_vectors(artists):
                 genres_vectors[genre].append(0)
             else:
                 genres_vectors[genre].append(artists[artist].terms[genre])
-    out_file = open('data/genres_vector.csv', 'w+')
-    for genre in genres_vectors:
-        out_file.write(genre.encode('utf-8'))
-        for i in genres_vectors[genre]:
-            out_file.write(',' + unicode(i))
-        out_file.write('\n')
-    out_file.close()
+    if printing:
+        out_file = open('data/genres_vector.csv', 'w+')
+        for genre in genres_vectors:
+            out_file.write(genre.encode('utf-8'))
+            for i in genres_vectors[genre]:
+                out_file.write(',' + unicode(i))
+            out_file.write('\n')
+        out_file.close()
+
+    return genres_vectors, artist_vectors
 
 
 def community_statistics(communities, output_file):
@@ -72,7 +80,7 @@ def community_statistics(communities, output_file):
     plt.close()
 
 
-def community_listening(communities, listening, artists, output_file):
+def community_listening(communities, listening, artists, output_file, genre_vector, artist_vector):
     artists_distribution = {}
     genres_distribution = dict()
 
@@ -185,27 +193,78 @@ def community_listening(communities, listening, artists, output_file):
 
     # print top 10 relevant artist foreach community
     out_file = open('community/' + output_file + '_top10_relevant_artist.txt', 'w+')
+    j = 0
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    cmap = get_cmap(len(diff_artist))
     for c in diff_artist:
         out_file.write(c.encode('utf-8') + '\n')
         diff_sorted = sorted(diff_artist[c].items(), key=operator.itemgetter(1), reverse=True)
-        for i in range(10):
+        vectors = []
+        for i in range(5):
             out_file.write(str(i + 1) + '\t' + diff_sorted[i][0][0].encode('utf-8')
                            + '\t' + str(diff_sorted[i][0][1])
                            + '\t' + str(diff_sorted[i][1]) + '\n')
+            vectors.append(artist_vector[diff_sorted[i][0][0]])
         out_file.write('\n')
+        vectors = np.array(vectors)
+        pca = PCA(n_components=3)
+        components = pca.fit_transform(vectors)
+        x = []
+        y = []
+        z = []
+        for co in components:
+            x.append(co[0])
+            y.append(co[1])
+            z.append(co[2])
+        col = cmap(j)
+        ax.scatter(x, y, z, color=col)
+        j += 1
+    plt.savefig('community/' + output_file + '_scatter_artists.png', format='png')
+    plt.close()
     out_file.close()
 
+    j = 0
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    cmap = get_cmap(len(diff_genre))
     # print top 10 relevant genre foreach community
     out_file = open('community/' + output_file + '_top10_relevant_genre.txt', 'w+')
     for c in diff_genre:
         out_file.write(c.encode('utf-8') + '\n')
         diff_sorted = sorted(diff_genre[c].items(), key=operator.itemgetter(1), reverse=True)
-        for i in range(10):
+        vectors = []
+        for i in range(5):
             out_file.write(str(i + 1) + '\t' + diff_sorted[i][0][0].encode('utf-8')
                            + '\t' + str(diff_sorted[i][0][1])
                            + '\t' + str(diff_sorted[i][1]) + '\n')
+            vectors.append(genre_vector[diff_sorted[i][0][0]])
         out_file.write('\n')
+        vectors = np.array(vectors)
+        pca = PCA(n_components=3)
+        components = pca.fit_transform(vectors)
+        x = []
+        y = []
+        z = []
+        for co in components:
+            x.append(co[0])
+            y.append(co[1])
+            z.append(co[2])
+        col = cmap(j)
+        ax.scatter(x, y, z, color=col)
+        j += 1
+    plt.savefig('community/' + output_file + '_scatter_genre.png', format='png')
+    plt.close()
     out_file.close()
+
+
+def get_cmap(n):
+    color_norm = colors.Normalize(vmin=0, vmax=n-1)
+    scalar_map = cmx.ScalarMappable(norm=color_norm, cmap='hsv')
+
+    def map_index_to_rgb_color(index):
+        return scalar_map.to_rgba(index)
+    return map_index_to_rgb_color
 
 
 def read_demon():
@@ -221,15 +280,15 @@ def main():
     artists, net = ma.read_data()
     listening = ma.get_node_listening(artists)
 
-    print_vectors(artists)
+    genre_vectors, artist_vector = build_vectors(artists)
 
     communities_kcliques = list(nx.k_clique_communities(net, 5))
     community_statistics(communities_kcliques, 'k-clique')
-    community_listening(communities_kcliques, listening, artists, 'k-clique')
+    community_listening(communities_kcliques, listening, artists, 'k-clique', genre_vectors, artist_vector)
 
     communities_demon = read_demon()
     community_statistics(communities_demon, 'demon')
-    community_listening(communities_demon, listening, artists, 'demon')
+    community_listening(communities_demon, listening, artists, 'demon', genre_vectors, artist_vector)
 
 
 if __name__ == '__main__':
