@@ -14,25 +14,6 @@ import graphviz as gv
 def build_tree(list, threshold):
     net = nx.DiGraph()
 
-    '''
-    tree = []
-    depth = 0
-    flag = True
-    i = 1
-    while i < len(list):
-        children = []
-        root = list[i-1]
-        while flag:
-            time_diff = (list[i][0] - root[0]).total_seconds()
-            if time_diff < threshold:
-                print root[1] + ' - ' + list[i][1]
-                children.append(list[i])
-            else:
-                flag = False
-            i += 1
-        print children
-    '''
-
     # Assign the root to a new list
     newlist = [list[0]]
 
@@ -42,6 +23,8 @@ def build_tree(list, threshold):
     # If the root has at least one child -> newList increased...
     # ... and the first cycle continue with a new root
 
+    first = list[0][1]
+    c = 0
     for root in newlist:
         j = 0
         for i in range(1, len(list)):
@@ -52,7 +35,8 @@ def build_tree(list, threshold):
                     j += 1
                     newlist.append(list[i])
                     net.add_edge(root[1], list[i][1], weight=time_diff)
-    return net
+
+    return net, first
 
 
 def max_sublist(list, threshold):
@@ -96,7 +80,14 @@ def main(artist, days):
     # listeners_list = local.get_listeners(artist)
     listeners_list = read_list(artist)
     max = max_sublist(listeners_list, days_threshold)
-    net = build_tree(max, days_threshold)
+    net, root = build_tree(max, days_threshold)
+
+    # Calculate width of first level of graph
+    width_first_level = len(net.neighbors(root))
+    print width_first_level
+
+    # Calculate number of nodes == length of list
+    print net.order()   # len(max)
 
     # print list(net.edges_iter(data=True))
     # ts = nx.topological_sort(net)
@@ -111,6 +102,7 @@ def main(artist, days):
     nx.draw_networkx_labels(net, pos, font_size=20, font_family='sans-serif')
     plt.axis('off')
     '''
+
     g = gv.Digraph(format='png')
     for node in nx.nodes(net):
         g.node(node)
@@ -118,7 +110,7 @@ def main(artist, days):
         x = round(net.get_edge_data(*edge)['weight']/3600, 1)
         g.edge(edge[0], edge[1], label=str(x))
 
-    g.render('prova')
+    g.render('listening_analysis/local_diffusion/local_diffusion_' + str(days) + '_' + artist.replace(' ', '_'))
 
 if __name__ == '__main__':
     main(sys.argv[1], sys.argv[2])
