@@ -8,6 +8,7 @@ import sys
 import networkx as nx
 import matplotlib.pyplot as plt
 import artist_listening as local
+import graphviz as gv
 
 
 def build_tree(list, threshold):
@@ -110,10 +111,14 @@ def main(artist, days):
     nx.draw_networkx_labels(net, pos, font_size=20, font_family='sans-serif')
     plt.axis('off')
     '''
-    plt.title(artist)
-    nx.draw(net, pos, with_labels=False, arrows=True)
-    plt.savefig("listening_analysis/local_diffusion/local_diffusion_" + str(days) + "_" + artist.replace(' ', '_') + ".png")
-    plt.show()  # display
+    g = gv.Digraph(format='png')
+    for node in nx.nodes(net):
+        g.node(node)
+    for edge in nx.edges(net):
+        x = round(net.get_edge_data(*edge)['weight']/3600, 1)
+        g.edge(edge[0], edge[1], label=str(x))
+
+    g.render('prova')
 
 if __name__ == '__main__':
     main(sys.argv[1], sys.argv[2])
