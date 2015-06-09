@@ -1,0 +1,115 @@
+digraph {
+	VNagahori
+	Piske81
+	Covenantt
+	Woaaw
+	Lemmy1311
+	Rendal
+	ferdyDOTit
+	Eliallday
+	commandtokil
+	Nandofisch
+	MatheusSampaioR
+	Sliron
+	shmatoid
+	Abbathamus
+	HarleyBlade
+	aquivaldo
+	"Templar-"
+	ailanda
+	andersabbath
+	Mihaill_Iliev
+	GunnerGirl96
+	FrozenCalzone
+	LCOllivera
+	VAMPYR42
+	"derya-ran"
+	SubmitToDeath
+	Grimbeorn
+	JoseGomez33
+	BeIieve
+	aliorrala18
+	Wednesday10
+	batcream
+	hellion6873
+	SLivik
+	Nypel
+	gabrielaiho
+	OnkelKurt
+	Evaneses
+	khanmart
+	metalmarky
+	CryForTheWeeper
+	LisuPK
+	steelballs
+	HellDogOnRock
+	Timekeeperrr
+	Matt_293
+	Daniel_Death
+	cbarreto87
+	machoznazaretu
+	"ingrid-1996"
+	Backflashed
+	FranticMetal
+	AboveMars
+	santyvascal
+	ReneGWH
+	leonardo_sky
+	drR0CK
+		Rendal -> commandtokil [label=23.3]
+		ferdyDOTit -> Sliron [label=20.3]
+		ferdyDOTit -> Lemmy1311 [label=0.1]
+		Eliallday -> ReneGWH [label=14.7]
+		Eliallday -> Wednesday10 [label=19.6]
+		commandtokil -> aliorrala18 [label=21.3]
+		commandtokil -> drR0CK [label=23.0]
+		MatheusSampaioR -> SLivik [label=22.1]
+		Sliron -> Eliallday [label=13.6]
+		Sliron -> HarleyBlade [label=20.1]
+		shmatoid -> Matt_293 [label=22.8]
+		shmatoid -> Abbathamus [label=22.8]
+		shmatoid -> Covenantt [label=23.8]
+		"Templar-" -> Nypel [label=23.4]
+		andersabbath -> Evaneses [label=18.7]
+		andersabbath -> "Templar-" [label=23.3]
+		VAMPYR42 -> BeIieve [label=21.4]
+		VAMPYR42 -> ailanda [label=18.3]
+		VAMPYR42 -> hellion6873 [label=17.4]
+		VAMPYR42 -> metalmarky [label=14.0]
+		VAMPYR42 -> santyvascal [label=15.0]
+		"derya-ran" -> machoznazaretu [label=23.1]
+		Grimbeorn -> "derya-ran" [label=21.7]
+		Grimbeorn -> OnkelKurt [label=22.8]
+		Grimbeorn -> SubmitToDeath [label=19.1]
+		BeIieve -> Daniel_Death [label=22.6]
+		Wednesday10 -> aquivaldo [label=22.5]
+		batcream -> leonardo_sky [label=23.1]
+		Nypel -> MatheusSampaioR [label=20.7]
+		Nypel -> batcream [label=22.1]
+		Nypel -> Woaaw [label=22.6]
+		gabrielaiho -> HellDogOnRock [label=23.3]
+		Evaneses -> Grimbeorn [label=23.2]
+		Evaneses -> VAMPYR42 [label=17.1]
+		metalmarky -> CryForTheWeeper [label=22.1]
+		CryForTheWeeper -> GunnerGirl96 [label=23.1]
+		CryForTheWeeper -> gabrielaiho [label=22.1]
+		Timekeeperrr -> LisuPK [label=19.0]
+		Matt_293 -> Mihaill_Iliev [label=20.8]
+		Matt_293 -> Nandofisch [label=23.9]
+		Matt_293 -> FrozenCalzone [label=21.2]
+		Matt_293 -> LCOllivera [label=21.4]
+		Matt_293 -> khanmart [label=20.4]
+		Matt_293 -> Backflashed [label=22.0]
+		cbarreto87 -> VNagahori [label=7.7]
+		cbarreto87 -> FranticMetal [label=9.2]
+		cbarreto87 -> steelballs [label=9.6]
+		cbarreto87 -> Rendal [label=7.6]
+		cbarreto87 -> Timekeeperrr [label=22.1]
+		"ingrid-1996" -> Piske81 [label=23.6]
+		"ingrid-1996" -> shmatoid [label=23.2]
+		FranticMetal -> JoseGomez33 [label=23.4]
+		AboveMars -> "ingrid-1996" [label=21.7]
+		santyvascal -> AboveMars [label=23.5]
+		ReneGWH -> andersabbath [label=22.8]
+		leonardo_sky -> cbarreto87 [label=23.2]
+}

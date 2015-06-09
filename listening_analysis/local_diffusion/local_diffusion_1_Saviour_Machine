@@ -1,0 +1,5 @@
+digraph {
+	miranta8
+	Creepsnight
+		miranta8 -> Creepsnight [label=6.0]
+}
