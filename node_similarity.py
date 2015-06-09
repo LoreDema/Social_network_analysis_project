@@ -95,47 +95,54 @@ def graph_stats(distance_couple, net):
     plt.close()
 
 
-def edge_removing(distance_couple, net):
-    clustering_coefficients = [nx.average_clustering(net)]
-    components = [len(list(nx.connected_components(net)))]
+def edge_removing(distance_couple, net1, net2):
+    clustering_coefficients = [nx.average_clustering(net1)]
+    components = [len(list(nx.connected_components(net1)))]
+    max_comp = [len(list(list(nx.connected_components(net1))[0]))]
 
     for i in range(100):
-        net.remove_edge(distance_couple[i][0][0], distance_couple[i][0][1])
-        clustering_coefficients.append(nx.average_clustering(net))
-        components.append(len(list(nx.connected_components(net))))
+        net1.remove_edge(distance_couple[i][0][0], distance_couple[i][0][1])
+        clustering_coefficients.append(nx.average_clustering(net1))
+        components.append(len(list(nx.connected_components(net1))))
+        max_comp.append(len(list(list(nx.connected_components(net1))[0])))
+
+    clustering_coefficients_rev = [nx.average_clustering(net2)]
+    components_rev = [len(list(nx.connected_components(net2)))]
+    max_comp_rev = [len(list(list(nx.connected_components(net2))[0]))]
+
+    for i in range(100):
+        net2.remove_edge(distance_couple[len(distance_couple) - 1 - i][0][0],
+                         distance_couple[len(distance_couple) - 1 - i][0][1])
+        clustering_coefficients_rev.append(nx.average_clustering(net2))
+        components_rev.append(len(list(nx.connected_components(net2))))
+        max_comp_rev.append(len(list(list(nx.connected_components(net2))[0])))
 
     plt.plot(clustering_coefficients, color='r')
+    plt.plot(clustering_coefficients_rev, color='b')
     plt.savefig('node_similarity/clustering_coeff.png', format='png')
     plt.close()
 
     plt.plot(components, color='r')
+    plt.plot(components_rev, color='b')
     plt.savefig('node_similarity/components.png', format='png')
     plt.close()
 
-    for i in range(100):
-        net.remove_edge(distance_couple[len(distance_couple) - 1 - i][0][0],
-                        distance_couple[len(distance_couple) - 1 - i][0][1])
-        clustering_coefficients.append(nx.average_clustering(net))
-        components.append(len(list(nx.connected_components(net))))
-
-    plt.plot(clustering_coefficients, color='r')
-    plt.savefig('node_similarity/clustering_coeff_rev.png', format='png')
-    plt.close()
-
-    plt.plot(components, color='r')
-    plt.savefig('node_similarity/components_rev.png', format='png')
+    plt.plot(max_comp, color='r')
+    plt.plot(max_comp_rev, color='b')
+    plt.savefig('node_similarity/len_max_comp.png', format='png')
     plt.close()
 
 
 def main():
     # reads from file and building the LastFm network
     artists, net = ma.read_data()
+    artists2, net2 = ma.read_data()
     listening = ma.get_node_listening(artists)
 
     users_vectors = get_vector(listening)
     distance_couple = distance(users_vectors, net)
-    graph_stats(distance_couple, net)
-    # edge_removing(distance_couple, net)
+    # graph_stats(distance_couple, net)
+    edge_removing(distance_couple, net, net2)
 
 if __name__ == '__main__':
     main()
