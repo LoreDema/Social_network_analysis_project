@@ -167,14 +167,31 @@ def community_listening(communities, listening, artists, output_file, genre_vect
             distances_genre[c] = np.linalg.norm(genre_vectors['total']-genre_vectors[c])
 
     # printing distances
+    vec_artist = []
     out_file = open('community/' + output_file + '_artist_euclidean_distances.txt', 'w+')
     for c in distances_artist:
+        vec_artist.append(distances_artist[c])
         out_file.write(c + ' ' + str(distances_artist[c]) + '\n')
     out_file.close()
+    vec_genre = []
     out_file = open('community/' + output_file + '_genre_euclidean_distances.txt', 'w+')
     for c in distances_genre:
+        vec_genre.append(distances_genre[c])
         out_file.write(c + ' ' + str(distances_genre[c]) + '\n')
     out_file.close()
+
+    vec_artist = sorted(vec_artist)
+    vec_genre = sorted(vec_genre)
+
+    plt.plot(vec_artist, color='r')
+    plt.savefig('community/' + output_file + '_distances_artist.png', format='png')
+    plt.close()
+
+    plt.plot(vec_genre, color='r')
+    plt.savefig('community/' + output_file + '_distances_genres.png', format='png')
+    plt.close()
+
+
 
     total_artist_sorted = sorted(artists_distribution['total'].items(), key=operator.itemgetter(1))
     total_genre_sorted = sorted(genres_distribution['total'].items(), key=operator.itemgetter(1))
