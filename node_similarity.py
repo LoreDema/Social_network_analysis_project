@@ -50,28 +50,48 @@ def graph_stats(distance_couple, net):
     common_neighbors = []
     jaccard = []
     adamic = []
+    edge_bet = []
+    edge_betweeness = nx.edge_betweenness_centrality(net)
     for couple in distance_couple:
         distances.append(couple[1])
         common_neighbors.append(len(list(nx.common_neighbors(net, couple[0][0], couple[0][1]))))
         jaccard.append(list(nx.jaccard_coefficient(net, [(couple[0][0], couple[0][1])]))[0][2])
         adamic.append(list(nx.adamic_adar_index(net, [(couple[0][0], couple[0][1])]))[0][2])
+        try:
+            edge_bet.append(edge_betweeness[couple[0]])
+        except KeyError:
+            edge_bet.append(edge_betweeness[(couple[0][1], couple[0][0])])
 
     r_dist = 10.0/max(distances)
     r_n = 10.0/max(common_neighbors)
     r_j = 10.0/max(jaccard)
     r_a = 10.0/max(adamic)
+    r_e = 10.0/max(edge_bet)
 
     distances = [j * r_dist for j in distances]
     common_neighbors = [j * r_n for j in common_neighbors]
     jaccard = [j * r_j for j in jaccard]
     adamic = [j * r_a for j in adamic]
+    edge_bet = [j * r_e for j in edge_bet]
 
+    plt.loglog(common_neighbors, color='b', label='common_neighbors')
     plt.loglog(distances, color='r', label='distances')
-    plt.loglog(common_neighbors, color='g', label='common_neighbors')
+    plt.savefig('node_similarity/stats_cm.png', format='png')
+    plt.close()
+
     plt.loglog(jaccard, color='b', label='jaccard')
-    plt.loglog(adamic, color='y', label='adamic')
-    plt.legend()
-    plt.savefig('node_similarity/stats1.png', format='png')
+    plt.loglog(distances, color='r', label='distances')
+    plt.savefig('node_similarity/stats_j.png', format='png')
+    plt.close()
+
+    plt.loglog(adamic, color='b', label='adamic')
+    plt.loglog(distances, color='r', label='distances')
+    plt.savefig('node_similarity/stats_aa.png', format='png')
+    plt.close()
+
+    plt.loglog(edge_bet, color='b', label='edge betwenness')
+    plt.loglog(distances, color='r', label='distances')
+    plt.savefig('node_similarity/stats_eb.png', format='png')
     plt.close()
 
 
@@ -114,8 +134,8 @@ def main():
 
     users_vectors = get_vector(listening)
     distance_couple = distance(users_vectors, net)
-    # graph_stats(distance_couple, net)
-    edge_removing(distance_couple, net)
+    graph_stats(distance_couple, net)
+    # edge_removing(distance_couple, net)
 
 if __name__ == '__main__':
     main()
