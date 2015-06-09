@@ -1,7 +1,7 @@
 __authors__ = 'Lorenzo De Mattei, Andrea Meini, Vincenzo Rizza'
 __license__ = "GPL"
 __email__ = 'lorenzo.demattei@gmail.com, ndrmeini@gmail.com, vincenzorizza6@gmail.com'
-import local_diffusion as local
+import artist_listening as local
 import codecs
 import csv
 import datetime
