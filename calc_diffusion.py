@@ -51,8 +51,6 @@ def build_tree(list, threshold):
                     j += 1
                     newlist.append(list[i])
                     net.add_edge(root[1], list[i][1], weight=time_diff)
-        print " --- ", j, " - ", i
-
     return net
 
 
@@ -98,8 +96,6 @@ def main(artist, days):
     listeners_list = read_list(artist)
     max = max_sublist(listeners_list, days_threshold)
     net = build_tree(max, days_threshold)
-    for line in nx.generate_edgelist(net):
-        print(line)
 
     # print list(net.edges_iter(data=True))
     # ts = nx.topological_sort(net)
